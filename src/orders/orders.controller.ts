@@ -1,8 +1,7 @@
-import { Controller } from '@nestjs/common';
+import { Controller, ParseUUIDPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Controller()
 export class OrdersController {
@@ -19,17 +18,7 @@ export class OrdersController {
   }
 
   @MessagePattern('find-one-order')
-  findOne(@Payload() id: number) {
+  findOne(@Payload('id', ParseUUIDPipe) id: string) {
     return this.ordersService.findOne(id);
-  }
-
-  @MessagePattern('update-order')
-  update(@Payload() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(updateOrderDto.id, updateOrderDto);
-  }
-
-  @MessagePattern('delete-order')
-  remove(@Payload() id: number) {
-    return this.ordersService.remove(id);
   }
 }
